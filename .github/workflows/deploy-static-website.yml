@@ -1,0 +1,26 @@
+name: Deploy Static Website
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  deployments: write
+  id-token: write
+
+jobs:
+  publish:
+    uses: King-Zingelwayo/gha-templates/.github/workflows/deploy-s3-static-site.yml@main
+    with:
+      source_dir: '.'
+      cache_control: 'max-age=31536000,public'
+      delete_remote: 'true'
+      pr_approval_required: 'false'
+      deployment_environment: ''
+    secrets:
+      AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+
