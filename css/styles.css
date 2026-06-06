@@ -276,7 +276,9 @@ main, .nav, .footer{ position:relative; z-index:2; }
 /* ---------- contact ---------- */
 .contact-list{ list-style:none; display:grid; gap:1.2rem; margin-top:2.4rem; }
 .contact-list li{ display:flex; gap:16px; align-items:flex-start; }
-.contact-list .ci{ font-size:1.1rem; width:42px; height:42px; flex:none; display:grid; place-items:center; border:1px solid var(--line); border-radius:12px; background:rgba(38,217,134,.05); }
+.contact-list .ci{ width:46px; height:46px; flex:none; display:grid; place-items:center; border:1px solid var(--line); border-radius:12px; background:rgba(38,217,134,.05); transition:border-color .3s, background .3s; }
+.contact-list .ci svg{ width:21px; height:21px; fill:none; stroke:var(--green-br); stroke-width:1.7; }
+.contact-list li:hover .ci{ border-color:var(--line-2); background:rgba(38,217,134,.1); }
 .contact-list strong{ display:block; font-family:var(--font); font-weight:600; font-size:.78rem; letter-spacing:.16em; text-transform:uppercase; color:var(--green-br); margin-bottom:.25rem; }
 .contact-list a:hover{ color:var(--green-br); }
 
