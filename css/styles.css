@@ -325,11 +325,13 @@ main, .nav, .footer{ position:relative; z-index:2; }
   .nav-cta{ display:none; }
   .nav-toggle{ display:flex; }
   .nav-links{
-    position:fixed; inset:0 0 0 auto; width:min(78vw,320px);
+    position:fixed; top:0; right:0; bottom:auto; left:auto;
+    height:100vh; height:100dvh; width:min(78vw,320px);
     flex-direction:column; gap:6px; padding:100px 30px 40px;
-    background:rgba(6,16,11,.97); backdrop-filter:blur(20px);
+    background:rgba(6,16,11,.98); backdrop-filter:blur(20px);
     border-left:1px solid var(--line); transform:translateX(100%);
     transition:transform .45s var(--ease);
+    overflow-y:auto;
   }
   .nav-links.open{ transform:none; }
   .nav-links a{ font-size:1.1rem; padding:.6rem 0; }
