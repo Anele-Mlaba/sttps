@@ -90,7 +90,8 @@
     });
   }
 
-  /* ---------- contact form (no backend — opens mail client) ---------- */
+  /* ---------- contact form (sends via cavetools-notification-service) ---------- */
+  var NOTIFICATION_API_URL = "https://a4usuvkkb6.execute-api.eu-west-1.amazonaws.com/Prod/notifications/send";
   var form = document.getElementById("contactForm");
   var note = document.getElementById("formNote");
   if (form) {
@@ -103,19 +104,46 @@
         showNote("Please add your name and email so we can respond.");
         return;
       }
-      var subject = "STTPS Enquiry — " + (data.get("service") || "General");
-      var body =
-        "Name: " + name + "\n" +
-        "Email: " + email + "\n" +
-        "Phone: " + (data.get("phone") || "-") + "\n" +
-        "Service: " + (data.get("service") || "-") + "\n\n" +
-        (data.get("message") || "");
-      window.location.href =
-        "mailto:help@sttps.co.za?subject=" +
-        encodeURIComponent(subject) +
-        "&body=" + encodeURIComponent(body);
-      showNote("Opening your mail client… If nothing happens, email us at help@sttps.co.za");
-      form.reset();
+
+      var btn = form.querySelector('button[type="submit"]');
+      var original = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = "Sending…";
+
+      var payload = {
+        appName: "sttps",
+        notificationType: "new_lead",
+        recipientType: "owner",
+        data: {
+          name: name,
+          email: email,
+          phone: (data.get("phone") || "").toString().trim() || "Not provided",
+          businessType: (data.get("service") || "General").toString(),
+          message: (data.get("message") || "").toString().trim() || "No message provided"
+        }
+      };
+
+      fetch(NOTIFICATION_API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      })
+        .then(function (response) {
+          if (!response.ok) throw new Error("API error: " + response.status);
+          return response.json();
+        })
+        .then(function () {
+          btn.disabled = false;
+          btn.textContent = original;
+          form.reset();
+          showNote("Thanks, " + name.split(" ")[0] + "! We've received your enquiry and will be in touch shortly.");
+        })
+        .catch(function (err) {
+          btn.disabled = false;
+          btn.textContent = original;
+          showNote("Something went wrong sending your enquiry. Please email us directly at help@sttps.co.za");
+          console.error("Form submission error:", err);
+        });
     });
   }
   function showNote(msg) {
